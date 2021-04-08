@@ -104,14 +104,6 @@ PyOD is featured for:
 * **Compatible with both Python 2 & 3**.
 
 
-**Note on Python 2.7**\ :
-The maintenance of Python 2.7 will be stopped by January 1, 2020 (see `official announcement <https://github.com/python/devguide/pull/344>`_).
-To be consistent with the Python change and PyOD's dependent libraries, e.g., scikit-learn, we will
-stop supporting Python 2.7 in the near future (dates are still to be decided). We encourage you to use
-Python 3.5 or newer for the latest functions and bug fixes. More information can
-be found at `Moving to require Python 3 <https://python3statement.org/>`_.
-
-
 **API Demo**\ :
 
 
@@ -210,6 +202,7 @@ be found at `Moving to require Python 3 <https://python3statement.org/>`_.
 
 * Python 2.7, 3.5, 3.6, or 3.7
 * combo>=0.0.8
+* joblib
 * numpy>=1.13
 * numba>=0.35
 * pandas>=0.25
@@ -219,7 +212,7 @@ be found at `Moving to require Python 3 <https://python3statement.org/>`_.
 
 **Optional Dependencies (see details below)**\ :
 
-
+* combo (optional, required for models/combination.py)
 * keras (optional, required for AutoEncoder)
 * matplotlib (optional, required for running examples)
 * pandas (optional, required for running benchmark)
@@ -324,6 +317,7 @@ Proximity-Based      kNN               k Nearest Neighbors (use the distance to 
 Proximity-Based      AvgKNN            Average kNN (use the average distance to k nearest neighbors as the outlier score)                      2002   [#Angiulli2002Fast]_
 Proximity-Based      MedKNN            Median kNN (use the median distance to k nearest neighbors as the outlier score)                        2002   [#Angiulli2002Fast]_
 Proximity-Based      SOD               Subspace Outlier Detection                                                                              2009   [#Kriegel2009Outlier]_
+Proximity-Based      ROD               Rotation-based Outlier Detection                                                                        2020   [#Almardeny2020A]_
 Probabilistic        ABOD              Angle-Based Outlier Detection                                                                           2008   [#Kriegel2008Angle]_
 Probabilistic        COPOD             COPOD: Copula-Based Outlier Detection                                                                   2020   [#Li2020COPOD]_
 Probabilistic        FastABOD          Fast Angle-Based Outlier Detection using approximation                                                  2008   [#Kriegel2008Angle]_
@@ -617,6 +611,8 @@ Reference
 .. [#Aggarwal2015Theoretical] Aggarwal, C.C. and Sathe, S., 2015. Theoretical foundations and algorithms for outlier ensembles.\ *ACM SIGKDD Explorations Newsletter*\ , 17(1), pp.24-47.
 
 .. [#Aggarwal2017Outlier] Aggarwal, C.C. and Sathe, S., 2017. Outlier ensembles: An introduction. Springer.
+
+.. [#Almardeny2020A] Almardeny, Y., Boujnah, N. and Cleary, F., 2020. A Novel Outlier Detection Method for Multivariate Data. *IEEE Transactions on Knowledge and Data Engineering*.
 
 .. [#Angiulli2002Fast] Angiulli, F. and Pizzuti, C., 2002, August. Fast outlier detection in high dimensional spaces. In *European Conference on Principles of Data Mining and Knowledge Discovery* pp. 15-27.
 

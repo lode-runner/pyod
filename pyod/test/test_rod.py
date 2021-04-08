@@ -4,10 +4,10 @@ from __future__ import print_function
 
 import os
 import sys
-
+import numpy as np
 import unittest
 # noinspection PyProtectedMember
-from numpy.testing import assert_allclose
+from numpy.testing import *
 from numpy.testing import assert_array_less
 from numpy.testing import assert_equal
 from numpy.testing import assert_raises
@@ -19,21 +19,21 @@ from scipy.stats import rankdata
 # if pyod is installed, no need to use the following line
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from pyod.models.cof import COF
+from pyod.models.rod import ROD, rod_3D, rod_nD, angle, sigmoid, process_sub, mad
 from pyod.utils.data import generate_data
 
 
-class TestCOF(unittest.TestCase):
+class TestROD(unittest.TestCase):
     def setUp(self):
         self.n_train = 100
         self.n_test = 50
         self.contamination = 0.1
         self.roc_floor = 0.8
         self.X_train, self.y_train, self.X_test, self.y_test = generate_data(
-            n_train=self.n_train, n_test=self.n_test,
+            n_train=self.n_train, n_test=self.n_test, n_features=4,
             contamination=self.contamination, random_state=42)
 
-        self.clf = COF(contamination=self.contamination)
+        self.clf = ROD()
         self.clf.fit(self.X_train)
 
     def test_parameters(self):
@@ -43,8 +43,8 @@ class TestCOF(unittest.TestCase):
                 self.clf.labels_ is not None)
         assert (hasattr(self.clf, 'threshold_') and
                 self.clf.threshold_ is not None)
-        assert (hasattr(self.clf, 'n_neighbors_') and
-                self.clf.n_neighbors_ is not None)
+        with assert_raises(TypeError):
+            ROD(parallel_execution='str')
 
     def test_train_scores(self):
         assert_equal(len(self.clf.decision_scores_), self.X_train.shape[0])
@@ -55,27 +55,9 @@ class TestCOF(unittest.TestCase):
         # check score shapes
         assert_equal(pred_scores.shape[0], self.X_test.shape[0])
 
-        # check performance
-        assert (roc_auc_score(self.y_test, pred_scores) >= self.roc_floor)
-
     def test_prediction_labels(self):
         pred_labels = self.clf.predict(self.X_test)
         assert_equal(pred_labels.shape, self.y_test.shape)
-
-    def test_prediction_proba(self):
-        pred_proba = self.clf.predict_proba(self.X_test)
-        assert (pred_proba.min() >= 0)
-        assert (pred_proba.max() <= 1)
-
-    def test_prediction_proba_linear(self):
-        pred_proba = self.clf.predict_proba(self.X_test, method='linear')
-        assert (pred_proba.min() >= 0)
-        assert (pred_proba.max() <= 1)
-
-    def test_prediction_proba_unify(self):
-        pred_proba = self.clf.predict_proba(self.X_test, method='unify')
-        assert (pred_proba.min() >= 0)
-        assert (pred_proba.max() <= 1)
 
     def test_prediction_proba_parameter(self):
         with assert_raises(ValueError):
@@ -114,18 +96,35 @@ class TestCOF(unittest.TestCase):
         assert_array_less(pred_ranks, 1.01)
         assert_array_less(-0.1, pred_ranks)
 
-    def test_check_parameters(self):
-        with assert_raises(ValueError):
-            COF(contamination=0.1, n_neighbors=-1)
-        with assert_raises(ValueError):
-            COF(contamination=10., n_neighbors=5)
-        with assert_raises(TypeError):
-            COF(contamination=0.1, n_neighbors='not int')
-        with assert_raises(TypeError):
-            COF(contamination='not float', n_neighbors=5)
-        cof_ = COF(contamination=0.1, n_neighbors=10000)
-        cof_.fit(self.X_train)
-        assert self.X_train.shape[0] > cof_.n_neighbors_
+    def test_invocation(self):
+        X_2D = self.X_train[:, 0:2]
+        X_3D = self.X_train[:, 0:3]
+        X_4D = self.X_train
+
+        with assert_raises(IndexError):
+            rod_3D(X_2D)
+        assert_array_equal(ROD().decision_function(X_2D),
+                           rod_3D(np.hstack((X_2D, np.zeros(shape=(X_2D.shape[0], 3 - X_2D.shape[1]))))))
+        assert_array_equal(ROD().decision_function(X_3D), rod_3D(X_3D))
+        assert_array_equal(ROD().decision_function(X_4D), rod_nD(X_4D, parallel=False))
+
+    def test_angle(self):
+        assert_equal(0.0, angle(v1=[0, 0, 1], v2=[0, 0, 1]))
+
+    def test_sigmoid(self):
+        assert_equal(0.5, sigmoid(np.array([0.0])))
+
+    def test_process_sub(self):
+        subspace = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+        assert_equal([0.5, 0.5, 0.5], process_sub(subspace))
+
+    def test_parallel_vs_non_parallel(self):
+        assert_equal(rod_nD(self.X_train, parallel=False),
+                     rod_nD(self.X_train, parallel=True))
+
+    def test_mad(self):
+        assert_equal([0.6745, 0.0, 0.6745],
+                     mad(np.array([1, 2, 3])))
 
     def tearDown(self):
         pass

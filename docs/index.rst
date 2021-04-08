@@ -108,13 +108,6 @@ PyOD is featured for:
 * **Compatible with both Python 2 & 3**.
 
 
-**Note on Python 2.7**\ :
-The maintenance of Python 2.7 will be stopped by January 1, 2020 (see `official announcement <https://github.com/python/devguide/pull/344>`_)
-To be consistent with the Python change and PyOD's dependent libraries, e.g., scikit-learn, we will
-stop supporting Python 2.7 in the near future (dates are still to be decided). We encourage you to use
-Python 3.5 or newer for the latest functions and bug fixes. More information can
-be found at `Moving to require Python 3 <https://python3statement.org/>`_.
-
 **API Demo**\ :
 
 
@@ -189,7 +182,8 @@ Proximity-Based      HBOS              Histogram-based Outlier Score            
 Proximity-Based      kNN               k Nearest Neighbors (use the distance to the kth nearest neighbor as the outlier score                  2000   :class:`pyod.models.knn.KNN`                         :cite:`a-ramaswamy2000efficient,a-angiulli2002fast`
 Proximity-Based      AvgKNN            Average kNN (use the average distance to k nearest neighbors as the outlier score)                      2002   :class:`pyod.models.knn.KNN`                         :cite:`a-ramaswamy2000efficient,a-angiulli2002fast`
 Proximity-Based      MedKNN            Median kNN (use the median distance to k nearest neighbors as the outlier score)                        2002   :class:`pyod.models.knn.KNN`                         :cite:`a-ramaswamy2000efficient,a-angiulli2002fast`
-Proximity-Based      SOD               Subspace Outlier Detection                                                                              2009   :class:`pyod.models.sod.SOD`                         :cite:`kriegel2009outlier`
+Proximity-Based      SOD               Subspace Outlier Detection                                                                              2009   :class:`pyod.models.sod.SOD`                         :cite:`a-kriegel2009outlier`
+Proximity-Based      ROD               Rotation-based Outlier Detection                                                                        2020   :class:`pyod.models.rod.ROD`                         :cite:`a-almardeny2020novel`
 Probabilistic        ABOD              Angle-Based Outlier Detection                                                                           2008   :class:`pyod.models.abod.ABOD`                       :cite:`a-kriegel2008angle`
 Probabilistic        FastABOD          Fast Angle-Based Outlier Detection using approximation                                                  2008   :class:`pyod.models.abod.ABOD`                       :cite:`a-kriegel2008angle`
 Probabilistic        COPOD             COPOD: Copula-Based Outlier Detection                                                                   2020   :class:`pyod.models.copod.COPOD`                     :cite:`a-li2020copod`
@@ -321,7 +315,7 @@ of the training data X_train, one should call clf.fit(X_train) and use
 
 .. rubric:: References
 
-.. bibliography:: zreferences.bib
+.. bibliography::
    :cited:
    :labelprefix: A
    :keyprefix: a-

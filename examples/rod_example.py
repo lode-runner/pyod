@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Example of using Copula Based Outlier Detector (COPOD) for outlier detection
+"""Example of using ROD for outlier detection
 """
-# Author: Winston Li <jk_zhengli@hotmail.com>
+# Author: Yahya Almardeny <almardeny@gmail.com>
 # License: BSD 2 clause
 
 from __future__ import division
@@ -12,10 +12,12 @@ import sys
 
 # temporary solution for relative imports in case pyod is not installed
 # if pyod is installed, no need to use the following line
+import time
+
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname("__file__"), '..')))
 
-from pyod.models.copod import COPOD
+from pyod.models.rod import ROD
 from pyod.utils.data import generate_data
 from pyod.utils.data import evaluate_print
 from pyod.utils.example import visualize
@@ -33,12 +35,11 @@ if __name__ == "__main__":
                       contamination=contamination,
                       random_state=42)
 
-    # train COPOD detector
-    clf_name = 'COPOD'
-    clf = COPOD()
+    # train ROD detector
+    clf_name = 'ROD'
+    clf = ROD()
     clf.fit(X_train)
 
-    # get the prediction labels and outlier scores of the training data
     y_train_pred = clf.labels_  # binary labels (0: inliers, 1: outliers)
     y_train_scores = clf.decision_scores_  # raw outlier scores
 

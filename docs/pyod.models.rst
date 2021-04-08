@@ -190,6 +190,17 @@ pyod.models.pca module
     :show-inheritance:
     :inherited-members:
 
+
+pyod.models.rod module
+----------------------
+
+.. automodule:: pyod.models.rod
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
+
+
 pyod.models.sod module
 ----------------------
 
@@ -247,6 +258,6 @@ Module contents
 
 .. rubric:: References
 
-.. bibliography:: zreferences.bib
+.. bibliography::
    :cited:
    :labelprefix: B
